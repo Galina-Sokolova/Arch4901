@@ -7,8 +7,6 @@ import Fabric.*;
 
 public class Main {
     public static void main(String[] args) throws Exception {
-//        ItemGenerator f1 = new GoldGenerator();
-//        f1.openReward();
 
         List<ItemGenerator> generators = new ArrayList<>();
 
@@ -17,28 +15,38 @@ public class Main {
         generators.add(new SilverGenerator());
         generators.add(new RubyGenerator());
         generators.add(new DiamondGenerator());
+        generators.add(new HealthGenerator());
+        generators.add(new BombGenerator());
+
 
         Random random = ThreadLocalRandom.current();
-        int countGem = 0;
-        final int LIMIT = 10;
-        int limitGem = LIMIT * 20 / 100;
+        //генерирует не более трех Gold и не более одного Gem
+        int countGold = 0;
+        final int LIMIT = 154;
+        int limitGold = 3;
         for (int i = 0; i < LIMIT; i++) {
-            if (countGem < limitGem) {
-                int index = random.nextInt(5);
-                if (index == 1) {
-                    countGem++;
+            if (countGold < limitGold) {
+                int index = random.nextInt(generators.size());
+                generators.get(index).openReward();
+                if (index == 0) {
+                    countGold++;
                 }
-                generators.get(index).openReward();
+                if (index == 1 & generators.size() == 7){
+                    generators.remove(index);
+                }
             }
 
-            if (countGem > limitGem) {
-                int index = random.nextInt(4);
+            if (countGold > limitGold) {
+                int index = random.nextInt(generators.size());
                 generators.get(index).openReward();
+                if (index == 0 & generators.size() == 6){
+                    generators.remove(index);
+                }
             }
 
-            if (countGem == limitGem) {
-                generators.remove(1);
-                countGem++;
+            if (countGold == limitGold) {
+                generators.remove(0);
+                countGold++;
             }
 
         }
